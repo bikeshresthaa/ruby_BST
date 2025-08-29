@@ -46,10 +46,41 @@ class Tree
     end
     root
   end
+
+  def in_order_successor(node)
+    successor = node.right_child
+    while successor && successor.left_child
+      successor = successor.left_child
+    end
+    successor
+  end
+
+  def delete(root = @root, key)
+    return root if root.nil?
+
+    if key > root.data
+      root.right_child = delete(root.right_child, key)
+    elsif key < root.data
+      root.left_child = delete(root.left_child, key)
+    else
+      if root.left_child == nil
+        return root.right_child
+      end
+      if root.right_child == nil
+        return root.left_child
+      end
+
+      successor = in_order_successor(root)
+      root.data = successor.data
+      root.right_child = delete(root.right_child, successor.data)
+    end
+    root
+
+  end
 end
 
-tree = Tree.new([5,4,3,2,1])
+tree = Tree.new([10,11,12,13,14,9,8,7,6,5,4,3,2,1])
 tree.array_to_bst
 tree.pretty_print
-tree.insert(6)
+tree.delete(2)
 tree.pretty_print

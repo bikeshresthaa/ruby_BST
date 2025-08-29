@@ -36,10 +36,20 @@ class Tree
     pretty_print(node.left_child, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left_child
   end
 
-
+  def insert(root = @root, key)
+    return Node.new(key) if root.nil?
+    return root if root.data == key
+    if key > root.data
+      root.right_child = insert(root.right_child, key)
+    else
+      root.left_child = insert(root.left_child, key)
+    end
+    root
+  end
 end
 
-tree = Tree.new([9,8,7,6,5,4,3,2,1,0])
-
+tree = Tree.new([5,4,3,2,1])
 tree.array_to_bst
+tree.pretty_print
+tree.insert(6)
 tree.pretty_print

@@ -25,11 +25,7 @@ class Tree
 
   def pre_order(root = @root, visited = [], &block)
     return root if root.nil?
-    if block_given?
-      block.call(root)
-    else
-      visited << root.data
-    end 
+    block_given? ? block.call(root) : visited << root.data
     pre_order(root.left_child, visited, &block) if !root.left_child.nil?
     pre_order(root.right_child, visited, &block) if !root.right_child.nil?
     return visited if !block_given?
@@ -38,13 +34,17 @@ class Tree
   def inorder(root = @root, visited = [], &block)
     return if root.nil?
     inorder(root.left_child, visited, &block)
-    if block_given?
-      block.call(root)
-    else
-      visited << root.data
-    end
+    block_given? ? block.call(root) : visited << root.data
     inorder(root.right_child, visited, &block)
-    return visited if !block_given?
+    return visited unless block_given?
+  end
+
+  def postorder(root = @root, visited = [], &block)
+    return root if root.nil?
+    postorder(root.left_child, visited, &block)
+    postorder(root.right_child, visited, &block)
+    block_given? ? block.call(root) : visited << root.data
+    return visited unless block_given?
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -146,4 +146,4 @@ end
 tree = Tree.new([11,10,9,8,7,6,5,4,3,2,1,0])
 tree.array_to_bst
 tree.pretty_print
-tree.inorder { |node| print "#{node.data}, "}
+p tree.postorder 

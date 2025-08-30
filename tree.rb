@@ -23,11 +23,28 @@ class Tree
     @root = build_tree(@array, @start, @last)
   end
 
-  def pre_order(root)
+  def pre_order(root = @root, visited = [], &block)
+    return root if root.nil?
+    if block_given?
+      block.call(root)
+    else
+      visited << root.data
+    end 
+    pre_order(root.left_child, visited, &block) if !root.left_child.nil?
+    pre_order(root.right_child, visited, &block) if !root.right_child.nil?
+    return visited if !block_given?
+  end
+
+  def inorder(root = @root, visited = [], &block)
     return if root.nil?
-    puts root.data
-    pre_order(root.left_child)
-    pre_order(root.right_child)
+    inorder(root.left_child, visited, &block)
+    if block_given?
+      block.call(root)
+    else
+      visited << root.data
+    end
+    inorder(root.right_child, visited, &block)
+    return visited if !block_given?
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -126,7 +143,7 @@ class Tree
   end
 end
 
-tree = Tree.new([1,2,3,4,5,6,7,8,9])
+tree = Tree.new([11,10,9,8,7,6,5,4,3,2,1,0])
 tree.array_to_bst
 tree.pretty_print
-p tree.level_order_recursion
+tree.inorder { |node| print "#{node.data}, "}

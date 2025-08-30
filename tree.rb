@@ -77,6 +77,18 @@ class Tree
     root
   end
 
+  def find_by_iteration(root = @root, key)
+    while root
+      return root if root.data == key
+      if root.data > key
+        root = root.left_child
+      else
+        root = root.right_child
+      end
+    end
+    return root if root.nil?
+  end
+
   def find(root = @root, key)
     return root if root.nil?
     if root.data == key
@@ -104,7 +116,7 @@ class Tree
   end
 end
 
-tree = Tree.new([1])
+tree = Tree.new([1,2,3,4,5])
 tree.array_to_bst
 tree.pretty_print
 p tree.level_order 

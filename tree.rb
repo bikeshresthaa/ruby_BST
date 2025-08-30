@@ -75,7 +75,28 @@ class Tree
       root.right_child = delete(root.right_child, successor.data)
     end
     root
+  end
 
+  # def find(root = @root, key)
+  #   while root
+  #     return root if root.data == key
+  #     if root.data > key
+  #       root = root.left_child
+  #     else
+  #       root = root.right_child
+  #     end
+  #   end
+  #   return root if root.nil?
+  # end
+  def find(root = @root, key)
+    return root if root.nil?
+    if root.data == key
+      return root
+    elsif root.data < key
+      find(root.right_child, key)
+    else
+      find(root.left_child, key)
+    end
   end
 end
 
@@ -84,3 +105,4 @@ tree.array_to_bst
 tree.pretty_print
 tree.delete(2)
 tree.pretty_print
+p tree.find(tree.root, 2)

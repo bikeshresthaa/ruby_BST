@@ -115,12 +115,14 @@ class Tree
     visited_nodes if !block
   end
 
-  def level_order_recursion(root = @root, res = [], level = 0)
-    return res if root.nil?
-    res.push([]) if res.length <= level
-    res[level] << root.data
-    level_order_recursion(root.left_child, res, level + 1)
-    level_order_recursion(root.right_child, res, level + 1)
+  def level_order_recursion(queue = [@root], visited_nodes = [], &block)
+    root = queue.shift
+    return root if root.nil? && block
+    return visited_nodes if root.nil? && !block
+    block ? block.call(root) : visited_nodes << root.data
+    queue << root.left_child if !root.left_child.nil?
+    queue << root.right_child if !root.right_child.nil?
+    level_order_recursion(queue, visited_nodes, &block)
   end
 end
 

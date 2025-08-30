@@ -25,7 +25,7 @@ class Tree
 
   def pre_order(root = @root, visited = [], &block)
     return root if root.nil?
-    block_given? ? block.call(root) : visited << root.data
+    block_given? ? block.call(root) : visited << root
     pre_order(root.left_child, visited, &block) if !root.left_child.nil?
     pre_order(root.right_child, visited, &block) if !root.right_child.nil?
     return visited if !block_given?
@@ -34,7 +34,7 @@ class Tree
   def inorder(root = @root, visited = [], &block)
     return if root.nil?
     inorder(root.left_child, visited, &block)
-    block_given? ? block.call(root) : visited << root.data
+    block_given? ? block.call(root) : visited << root
     inorder(root.right_child, visited, &block)
     return visited unless block_given?
   end
@@ -43,7 +43,7 @@ class Tree
     return root if root.nil?
     postorder(root.left_child, visited, &block)
     postorder(root.right_child, visited, &block)
-    block_given? ? block.call(root) : visited << root.data
+    block_given? ? block.call(root) : visited << root
     return visited unless block_given?
   end
 
@@ -141,9 +141,20 @@ class Tree
     queue << root.right_child if !root.right_child.nil?
     level_order_recursion(queue, visited_nodes, &block)
   end
+
+  def height(root = @root, height = 0)
+    return if root.nil?
+    left_height = height(root.left_child, height + 1) if root.left_child
+    right_height = height(root.right_child, height + 1) if root.right_child
+    return height if !right_height && !left_height
+    return left_height if !right_height
+    return right_height if !left_height
+    return [left_height, right_height].max
+  end
 end
 
-tree = Tree.new([11,10,9,8,7,6,5,4,3,2,1,0])
+tree = Tree.new([0,1,2,3,4,5,6,7,8,9])
 tree.array_to_bst
 tree.pretty_print
-p tree.postorder 
+p tree.height
+p tree.find(10)

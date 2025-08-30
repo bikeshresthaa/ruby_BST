@@ -77,17 +77,6 @@ class Tree
     root
   end
 
-  # def find(root = @root, key)
-  #   while root
-  #     return root if root.data == key
-  #     if root.data > key
-  #       root = root.left_child
-  #     else
-  #       root = root.right_child
-  #     end
-  #   end
-  #   return root if root.nil?
-  # end
   def find(root = @root, key)
     return root if root.nil?
     if root.data == key
@@ -98,11 +87,24 @@ class Tree
       find(root.left_child, key)
     end
   end
+  
+  def level_order
+    block = block_given?
+    root = @root
+    return root if root.nil?
+    queue = [root]
+    visited_nodes = []
+    while !queue.empty?
+      root = queue.shift
+      queue.push(root.left_child) if !root.left_child.nil?
+      queue.push(root.right_child) if !root.right_child.nil?
+      block ? yield(root) : visited_nodes << root
+    end
+    visited_nodes if !block
+  end
 end
 
-tree = Tree.new([10,11,12,13,14,9,8,7,6,5,4,3,2,1])
+tree = Tree.new([1])
 tree.array_to_bst
 tree.pretty_print
-tree.delete(2)
-tree.pretty_print
-p tree.find(tree.root, 2)
+p tree.level_order 

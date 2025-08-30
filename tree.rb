@@ -114,9 +114,17 @@ class Tree
     end
     visited_nodes if !block
   end
+
+  def level_order_recursion(root = @root, res = [], level = 0)
+    return res if root.nil?
+    res.push([]) if res.length <= level
+    res[level] << root.data
+    level_order_recursion(root.left_child, res, level + 1)
+    level_order_recursion(root.right_child, res, level + 1)
+  end
 end
 
-tree = Tree.new([1,2,3,4,5])
+tree = Tree.new([1,2,3,4,5,6,7,8,9])
 tree.array_to_bst
 tree.pretty_print
-p tree.level_order 
+p tree.level_order_recursion

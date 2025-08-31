@@ -34,7 +34,7 @@ class Tree
   def inorder(root = @root, visited = [], &block)
     return if root.nil?
     inorder(root.left_child, visited, &block)
-    block_given? ? block.call(root) : visited << root
+    block_given? ? block.call(root) : visited << root.data
     inorder(root.right_child, visited, &block)
     return visited unless block_given?
   end
@@ -179,6 +179,12 @@ class Tree
       false
     end 
   end
+  def rebalance
+    @array = self.inorder.uniq.sort
+    @start = @array.index(@array.first)
+    @last = @array.index(@array.last)
+    self.array_to_bst
+  end
 end
 
 tree = Tree.new([0,1,2,3,4,5,6,7,8,9,10])
@@ -188,6 +194,18 @@ p tree.balanced?
 tree.delete(0)
 tree.delete(1)
 tree.delete(4)
+tree.delete(7)
+tree.insert(11)
+tree.insert(121)
+tree.insert(111)
+tree.insert(131)
+tree.insert(101)
+tree.insert(91)
+tree.insert(81)
+
 tree.pretty_print
 p tree.balanced?
 
+tree.rebalance
+tree.pretty_print
+p tree.balanced?

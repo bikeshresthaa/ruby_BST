@@ -149,9 +149,7 @@ class Tree
 
   def get_height(root)
     return -1 if root.nil?
-    left_height = get_height(root.left_child) 
-    right_height = get_height(root.right_child) 
-    return ( [left_height, right_height].max + 1 )
+    return ( [get_height(root.left_child), get_height(root.right_child)].max + 1 )
   end
 
   def depth(root = @root, deep = 0, key)
@@ -164,9 +162,32 @@ class Tree
       return depth(root.right_child, deep + 1, key)
     end
   end
+
+  def get_balanced_height(root = @root)
+    return 0 if root.nil?
+    return ( [ get_balanced_height(root.left_child), get_balanced_height(root.right_child) ].max + 1)
+  end
+
+  def balanced?(root = @root)
+    return true if root.nil?
+    left_height = get_balanced_height(root.left_child)
+    right_height = get_balanced_height(root.right_child)
+    difference = left_height - right_height
+    if difference.between?(-1, 1)
+      (balanced?(root.left_child) and balanced?(root.right_child))
+    else
+      false
+    end 
+  end
 end
 
-tree = Tree.new([0,1,2,3,4,5,6,7,8,9])
+tree = Tree.new([0,1,2,3,4,5,6,7,8,9,10])
 tree.array_to_bst
 tree.pretty_print
-p tree.depth(4)
+p tree.balanced?
+tree.delete(0)
+tree.delete(1)
+tree.delete(4)
+tree.pretty_print
+p tree.balanced?
+

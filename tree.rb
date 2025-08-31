@@ -7,6 +7,7 @@ class Tree
     @array = array.uniq.sort
     @start = @array.index(@array.first)
     @last = @array.index(@array.last)
+    self.array_to_bst
   end
 
   def build_tree(array, start, last)
@@ -127,7 +128,7 @@ class Tree
       root = queue.shift
       queue.push(root.left_child) if !root.left_child.nil?
       queue.push(root.right_child) if !root.right_child.nil?
-      block ? yield(root) : visited_nodes << root
+      block ? yield(root) : visited_nodes << root.data
     end
     visited_nodes if !block
   end
@@ -187,25 +188,14 @@ class Tree
   end
 end
 
-tree = Tree.new([0,1,2,3,4,5,6,7,8,9,10])
-tree.array_to_bst
-tree.pretty_print
+tree = Tree.new((Array.new(15) { rand(1..100) }))
 p tree.balanced?
-tree.delete(0)
-tree.delete(1)
-tree.delete(4)
-tree.delete(7)
-tree.insert(11)
-tree.insert(121)
-tree.insert(111)
-tree.insert(131)
-tree.insert(101)
-tree.insert(91)
-tree.insert(81)
-
-tree.pretty_print
+10.times do
+  tree.insert(rand(100..300))
+end
+p tree.inorder
 p tree.balanced?
-
 tree.rebalance
-tree.pretty_print
 p tree.balanced?
+tree.pretty_print
+p tree.level_order

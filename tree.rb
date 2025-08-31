@@ -142,19 +142,31 @@ class Tree
     level_order_recursion(queue, visited_nodes, &block)
   end
 
-  def height(root = @root, height = 0)
-    return if root.nil?
-    left_height = height(root.left_child, height + 1) if root.left_child
-    right_height = height(root.right_child, height + 1) if root.right_child
-    return height if !right_height && !left_height
-    return left_height if !right_height
-    return right_height if !left_height
-    return [left_height, right_height].max
+  def height(node = @root.data)
+    found = find(node)
+    found ? get_height(found) : found
+  end
+
+  def get_height(root)
+    return -1 if root.nil?
+    left_height = get_height(root.left_child) 
+    right_height = get_height(root.right_child) 
+    return ( [left_height, right_height].max + 1 )
+  end
+
+  def depth(root = @root, deep = 0, key)
+    return root if root.nil?
+    if root.data == key
+      return deep
+    elsif root.data > key
+      return depth(root.left_child, deep + 1, key)
+    else
+      return depth(root.right_child, deep + 1, key)
+    end
   end
 end
 
 tree = Tree.new([0,1,2,3,4,5,6,7,8,9])
 tree.array_to_bst
 tree.pretty_print
-p tree.height
-p tree.find(10)
+p tree.depth(4)
